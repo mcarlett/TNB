@@ -22,7 +22,12 @@ public class LocalJaeger extends Jaeger implements Deployable, WithDockerImage {
     public void deploy() {
         LOG.info("Starting Jaeger container");
         container = new JaegerContainer(image(), env());
-        container.start();
+        try {
+            container.start();
+        } catch (Exception e) {
+            LOG.error(container.getLogs());
+            throw new RuntimeException(e);
+        }
         LOG.info("Jaeger container started");
     }
 
