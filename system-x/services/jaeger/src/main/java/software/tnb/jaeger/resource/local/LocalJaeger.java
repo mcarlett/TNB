@@ -10,6 +10,7 @@ import software.tnb.jaeger.validation.JaegerValidation;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.ContainerLaunchException;
 
 import com.google.auto.service.AutoService;
 
@@ -22,13 +23,19 @@ public class LocalJaeger extends Jaeger implements Deployable, WithDockerImage {
     public void deploy() {
         LOG.info("Starting Jaeger container");
         container = new JaegerContainer(image(), env());
-        container.start();
+        try {
+            container.start();
+        } catch (ContainerLaunchException e) {
+            LOG.error("Jaeger container won't start");
+            LOG.error(container.getLogs());
+            throw e;
+        }
         LOG.info("Jaeger container started");
     }
 
     @Override
     public void undeploy() {
-        if (container != null) {
+        if (container != null && container.isRunning()) {
             LOG.info("Stopping Jaeger container");
             container.stop();
         }
