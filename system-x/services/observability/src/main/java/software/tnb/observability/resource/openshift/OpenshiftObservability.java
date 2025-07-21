@@ -1,5 +1,6 @@
 package software.tnb.observability.resource.openshift;
 
+import io.fabric8.kubernetes.client.http.HttpClient;
 import software.tnb.common.deployment.OpenshiftDeployable;
 import software.tnb.common.deployment.WithOperatorHub;
 import software.tnb.common.openshift.OpenshiftClient;
@@ -30,9 +31,14 @@ public class OpenshiftObservability extends Observability implements OpenshiftDe
     private static final Logger LOG = LoggerFactory.getLogger(OpenshiftObservability.class);
 
     @Override
+    protected HttpClient client() {
+        return OpenshiftClient.get().getHttpClient();
+    }
+
+    @Override
     public ObservabilityValidation validation() {
         validation = Optional.ofNullable(validation)
-            .orElseGet(() -> new ObservabilityValidation(getConfiguration().getTempoStackName()));
+            .orElseGet(() -> new ObservabilityValidation(client(), getConfiguration().getTempoStackName()));
         return validation;
     }
 
@@ -57,7 +63,6 @@ public class OpenshiftObservability extends Observability implements OpenshiftDe
 
     @Override
     public void closeResources() {
-
     }
 
     @Override

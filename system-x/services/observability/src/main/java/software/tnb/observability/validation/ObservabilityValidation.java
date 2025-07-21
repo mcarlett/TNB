@@ -41,8 +41,8 @@ public class ObservabilityValidation implements Validation {
     private final String baseUrl;
     private final ObjectMapper objectMapper;
 
-    public ObservabilityValidation(String tempoStackName) {
-        this.client = OpenshiftClient.get().authorization().getHttpClient();
+    public ObservabilityValidation(HttpClient client, String tempoStackName) {
+        this.client = client;
         this.baseUrl = "%s/api/proxy/plugin/distributed-tracing-console-plugin/backend/proxy/%s/%s/application/api"
             .formatted(OpenshiftClient.get().getConsoleUrl(), OpenshiftClient.get().getNamespace(), tempoStackName);
         this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
