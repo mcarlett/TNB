@@ -229,8 +229,6 @@ public class CustomJKubeStrategy extends OpenshiftCustomDeployer {
 
     private String getDeploymentContent() throws IOException {
         String deploymentContent = IOUtils.resourceToString("/openshift/csb/deployment.yaml", StandardCharsets.UTF_8);
-        deploymentContent = StringUtils.replace(deploymentContent, "XX_DEPLOYMENT_NAME",
-                integrationBuilder.getIntegrationName());
         deploymentContent = StringUtils.replace(deploymentContent, "XX_JAVA_OPTS_APPEND",
                 getPropertiesForJVM(integrationBuilder).replaceAll("\"", "\\\\\""));
         deploymentContent = StringUtils.replace(deploymentContent, "XX_NODE_HOSTNAME",
@@ -248,11 +246,11 @@ public class CustomJKubeStrategy extends OpenshiftCustomDeployer {
         List<Volume> volumes = integrationBuilder.getVolumes().stream()
             .map(v -> {
                 VolumeBuilder builder = new VolumeBuilder().withName(v.name());
-                if ("configMap".equals(v.typeString())) {
+                if ("configMap".equals(v.type())) {
                     builder.withNewConfigMap().withName(v.source()).endConfigMap();
-                } else if ("secret".equals(v.typeString())) {
+                } else if ("secret".equals(v.type())) {
                     builder.withNewSecret().withSecretName(v.source()).endSecret();
-                } else if ("emptyDir".equals(v.typeString())) {
+                } else if ("emptyDir".equals(v.type())) {
                     builder.withNewEmptyDir().endEmptyDir();
                 }
                 return builder.build();

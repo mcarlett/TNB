@@ -1,5 +1,4 @@
 metadata:
-  name: XX_DEPLOYMENT_NAME
   annotations:
     configmap.jkube.io/update-on-change: ${project.artifactId}
 spec:
