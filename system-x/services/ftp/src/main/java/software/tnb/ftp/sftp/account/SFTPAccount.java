@@ -6,7 +6,6 @@ public class SFTPAccount implements FileTransferAccount {
 
     private String username = "test";
     private String password = "test";
-    private String trustedUserCAKeys;
 
     @Override
     public void setUsername(String username) {
@@ -34,13 +33,5 @@ public class SFTPAccount implements FileTransferAccount {
 
     public String homeDir() {
         return "data";
-    }
-
-    public String trustedUserCAKeys() {
-        return trustedUserCAKeys;
-    }
-
-    public void setTrustedUserCAKeys(String trustedUserCAKeys) {
-        this.trustedUserCAKeys = trustedUserCAKeys;
     }
 }
